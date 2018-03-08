@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>title</title>
+  <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="./leaflet.css" />
+  <script src="./leaflet.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+
+<div id="map0" style="width: 500px; height: 500px;"></div>
+<script>
+
+
+var map1 = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+maxZoom: 18,
+attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+});
+
+var map2 = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg', {
+maxZoom: 18,
+attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+});
+
+var gjson = L.layerGroup()
+
+$.getJSON("tokyo23ku-cvs.geojson", function (data) {
+    L.geoJson(data).bindPopup(function (layer) {
+    return layer.feature.properties.name;
+}).addTo(gjson)
+});
+
+var map = L.map('map0',{
+	center:[35.705,139.736],
+	zoom:11,
+	layers:[map1,gjson]
+});
+
+
+
+//var layers = {:,};
+
+
+var basemaps = {
+"標準地図": map1,
+"写真（2007～）":map2
+};
+
+var layer = {
+	"gjson":gjson
+}
+
+L.control.layers(basemaps,layer).addTo(map);
+
+L.control.scale({imperial: false}).addTo(map);
+
+
+</script>
+
+
+
+</body>
+</html>

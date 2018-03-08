@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>title</title>
+  <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="./leaflet.css" />
+  <script src="./leaflet.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+
+<div id="map0" style="width: 500px; height: 500px;"></div>
+<script>
+
+
+var map1 = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+maxZoom: 18,
+attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+});
+
+var map2 = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg', {
+maxZoom: 18,
+attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+});
+
+
+
+var markers = L.layerGroup();
+L.marker([36.0, 138.7]).bindPopup('この地点の座標は、36.0, 138.7です').addTo(markers);
+L.marker([36.0, 138.9]).bindPopup('この地点の座標は、36.0, 138.8です').addTo(markers);
+L.marker([36.05, 138.9]).bindPopup('この地点の座標は、36.0, 138.9です').addTo(markers);
+L.marker([36.05, 138.7]).bindPopup('この地点の座標は、36.0, 138.9です').addTo(markers);
+
+
+var polygon =
+
+L.polygon([
+    [36.0, 138.7],
+    [36.0, 138.9],
+		[36.05, 138.9],
+		[36.05, 138.7]
+], {color:'pink',fillOpacity:0.5}).bindPopup('これは、ポリゴンです。');
+
+var polyline =
+L.polyline([
+    [36.0, 138.7],
+    [36.05, 138.8],
+    [36.0, 138.9],
+		[36.0, 138.7]
+], {color: 'yellow',weight: 3}).bindPopup('これは、ラインです。');
+
+var map = L.map('map0',{
+	center:[36.0, 138.7],
+	zoom:13,
+	layers:[map1,markers,polyline,polygon]
+});
+
+
+
+var layers = {
+	"ポイント": markers,
+	"ライン":polyline,
+	"ポリゴン":polygon
+};
+
+
+var basemaps = {
+"標準地図": map1,
+"写真（2007～）":map2
+};
+
+
+L.control.layers(basemaps,layers).addTo(map);
+
+L.control.scale({imperial: false}).addTo(map);
+
+
+
+</script>
+
+
+
+</body>
+</html>
